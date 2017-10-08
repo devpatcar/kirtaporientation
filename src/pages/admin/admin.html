@@ -19,5 +19,26 @@
 
 
 <ion-content padding>
-
+    <ion-list>
+      <ion-item>
+        <button ion-button color-primary large full (click)="createCourse()">Create course</button>
+      </ion-item>
+        <ion-item-sliding *ngFor="let course of courses">
+          <ion-item>            
+            <h2>{{course.name}} - {{course.distance}} km</h2>
+          </ion-item>
+          <ion-item-options side="left">            
+            <button ion-button color="danger">
+              <ion-icon name="trash"></ion-icon>
+              Remove
+            </button>
+          </ion-item-options>
+          <ion-item-options side="right">
+            <button ion-button color="secondary">
+              <ion-icon name="settings"></ion-icon>
+              Edit
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
 </ion-content>
