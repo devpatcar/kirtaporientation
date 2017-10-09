@@ -1,7 +1,8 @@
-import { Component, Injectable } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import {ReplaySubject} from 'rxjs/ReplaySubject';
 import firebase from 'firebase';
+import { AdminPage} from '../admin/admin';
 
 /**
  * Generated class for the CoursePage page.
@@ -37,6 +38,7 @@ export class CoursePage {
     if(this.course.name != ""){
       this._coursesRef.push(this.course).key;
       this.course.name = "";
+      this.navCtrl.push(AdminPage);
     }    
   }
 }
