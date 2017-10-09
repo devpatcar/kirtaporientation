@@ -8,6 +8,7 @@ import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
 import { CoursePage } from '../pages/course/course';
 import { AdminPage } from '../pages/admin/admin';
+import { EditcoursePage} from '../pages/editcourse/editcourse';
 import firebase from 'firebase';
 
 firebase.initializeApp({
@@ -24,7 +25,8 @@ firebase.initializeApp({
     HomePage,
     LoginPage,
     CoursePage,
-    AdminPage
+    AdminPage,
+    EditcoursePage
   ],
   imports: [
     BrowserModule,
@@ -36,7 +38,8 @@ firebase.initializeApp({
     HomePage,
     LoginPage,
     CoursePage,
-    AdminPage
+    AdminPage,
+    EditcoursePage
   ],
   providers: [
     StatusBar,

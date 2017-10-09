@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import firebase from 'firebase';
 import { CoursePage} from '../course/course';
+import { EditcoursePage} from '../editcourse/editcourse';
 
 @IonicPage()
 @Component({
@@ -59,8 +60,8 @@ export class AdminPage {
     alert.present();
   }
 
-  editCourse(){
-    
+  editCourse(course){
+    this.navCtrl.push(EditcoursePage, course);
   }
 
   logOut(){
