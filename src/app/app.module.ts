@@ -10,6 +10,7 @@ import { CoursePage } from '../pages/course/course';
 import { AdminPage } from '../pages/admin/admin';
 import { EditcoursePage} from '../pages/editcourse/editcourse';
 import firebase from 'firebase';
+import { Geolocation } from '@ionic-native/geolocation';
 
 firebase.initializeApp({
   apiKey: "AIzaSyADbRIKb5BJHYwORXO2FWjy4RW4Xl4CRDE",
@@ -44,6 +45,7 @@ firebase.initializeApp({
   providers: [
     StatusBar,
     SplashScreen,
+    Geolocation,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
