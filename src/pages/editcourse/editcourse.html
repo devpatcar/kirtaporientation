@@ -8,11 +8,18 @@
 
   <ion-navbar>
     <ion-title>editcourse</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="addMarker()"><ion-icon name="add"></ion-icon>Add Marker</button>
+    </ion-buttons> 
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-
+<div>
+  <h1>{{course.name}}</h1>
+  <h2>{{course.distance}} km</h2>
+</div>
+<div #map id="map"></div>
 </ion-content>
