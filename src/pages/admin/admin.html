@@ -25,7 +25,7 @@
       </ion-item>
         <ion-item-sliding *ngFor="let course of courses">
           <ion-item>            
-            <h2>{{course.name}} - {{course.distance}} km</h2>
+            <h2>{{course.name}} - {{course.distance| number : '1.2-2'}} km</h2>
           </ion-item>
           <ion-item-options side="left">            
             <button ion-button color="danger" (click)="removeCourse(course)">

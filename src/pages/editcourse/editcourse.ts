@@ -34,8 +34,7 @@ export class EditcoursePage {
     this.loadMap();    
   }
 
-  setUpMarkers(markers, map){
-    console.log(markers[0].lat);
+  setUpMarkers(markers, map){   
     for (var index = 0; index < markers.length; index++) { 
     let marker = new google.maps.Marker({
       map: map,
@@ -149,10 +148,12 @@ export class EditcoursePage {
           this.markers.splice(index, 1);
         }        
         marker.setMap(null);
+        this.calcLenght();
       });
 
        google.maps.event.addListener(marker, 'click', () => {
          infoWindow.open(this.map, marker);
+         this.calcLenght();
        });
 
        google.maps.event.addListener(marker, 'drag', () => {
