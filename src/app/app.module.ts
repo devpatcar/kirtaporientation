@@ -11,6 +11,8 @@ import { AdminPage } from '../pages/admin/admin';
 import { EditcoursePage} from '../pages/editcourse/editcourse';
 import firebase from 'firebase';
 import { Geolocation } from '@ionic-native/geolocation';
+import { ResultPage } from '../pages/result/result';
+import { CompetePage } from '../pages/compete/compete';
 
 firebase.initializeApp({
   apiKey: "AIzaSyADbRIKb5BJHYwORXO2FWjy4RW4Xl4CRDE",
@@ -27,7 +29,9 @@ firebase.initializeApp({
     LoginPage,
     CoursePage,
     AdminPage,
-    EditcoursePage
+    EditcoursePage,
+    ResultPage,
+    CompetePage
   ],
   imports: [
     BrowserModule,
@@ -40,7 +44,9 @@ firebase.initializeApp({
     LoginPage,
     CoursePage,
     AdminPage,
-    EditcoursePage
+    EditcoursePage,
+    ResultPage,
+    CompetePage
   ],
   providers: [
     StatusBar,

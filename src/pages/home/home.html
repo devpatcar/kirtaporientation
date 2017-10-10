@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Ionic Blank
+      Ionic orientation
     </ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="goToLogin()">
@@ -12,8 +12,12 @@
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+  <ion-list>
+    <ion-item>
+      <button ion-button color-primary large full (click)="results()">Results</button>
+    </ion-item>      
+        <button ion-item *ngFor="let course of courses" (click)="itemSelected(course)">                   
+          <h2>{{course.name}} - {{course.distance| number : '1.2-2'}} km</h2>         
+        </button >  
+    </ion-list>
 </ion-content>
