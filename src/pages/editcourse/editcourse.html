@@ -19,7 +19,7 @@
 <ion-content padding>
 <div>
   <h1>{{course.name}}</h1>
-  <h2>{{course.distance}} km</h2>
+  <h2>{{course.distance | number : '1.2-2'}} km</h2>
 </div>
 <div #map id="map"></div>
 </ion-content>
