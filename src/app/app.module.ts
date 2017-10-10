@@ -13,6 +13,7 @@ import firebase from 'firebase';
 import { Geolocation } from '@ionic-native/geolocation';
 import { ResultPage } from '../pages/result/result';
 import { CompetePage } from '../pages/compete/compete';
+import {SimpleTimer} from 'ng2-simple-timer';
 
 firebase.initializeApp({
   apiKey: "AIzaSyADbRIKb5BJHYwORXO2FWjy4RW4Xl4CRDE",
@@ -52,6 +53,7 @@ firebase.initializeApp({
     StatusBar,
     SplashScreen,
     Geolocation,
+    SimpleTimer,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -1,6 +1,7 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
+import {SimpleTimer} from 'ng2-simple-timer';
 
 /**
  * Generated class for the CompetePage page.
@@ -23,15 +24,24 @@ export class CompetePage {
   saveMarkers:any = []; 
   private _db: any;
   private _coursesRef: any;
+  counter = 0;   
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public geolocation: Geolocation) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public geolocation: Geolocation, private st: SimpleTimer) {
     this.course = this.navParams.data; 
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad CompetePage');
     this.loadMap();  
+    this.st.newTimer('1sec',1);
+    this.subscribeTimer();
+  } 
+  subscribeTimer(){
+    this.st.subscribe('1sec', () => this.timercallback());     
   }
+  timercallback() {
+		this.counter++;
+	}
   loadMap(){
     
     this.geolocation.getCurrentPosition().then((position) => {
@@ -81,3 +91,4 @@ export class CompetePage {
     
    }
 }
+
