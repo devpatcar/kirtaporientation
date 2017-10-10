@@ -14,6 +14,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { ResultPage } from '../pages/result/result';
 import { CompetePage } from '../pages/compete/compete';
 import {SimpleTimer} from 'ng2-simple-timer';
+import { IonicStorageModule } from '@ionic/storage';
 
 firebase.initializeApp({
   apiKey: "AIzaSyADbRIKb5BJHYwORXO2FWjy4RW4Xl4CRDE",
@@ -36,7 +37,8 @@ firebase.initializeApp({
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [

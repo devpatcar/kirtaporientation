@@ -1,7 +1,8 @@
 import { Component, ViewChild, ElementRef} from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 import {SimpleTimer} from 'ng2-simple-timer';
+import { Storage } from '@ionic/storage';
 
 /**
  * Generated class for the CompetePage page.
@@ -20,13 +21,13 @@ export class CompetePage {
   course:any;
   @ViewChild('map') mapElement: ElementRef;
   map: any;
-  markers:any = []; 
-  saveMarkers:any = []; 
-  private _db: any;
-  private _coursesRef: any;
-  counter = 0;   
+  result:any = []; 
+  saveMarkers:any = [];   
+  counter = 0;  
+  marker:any; 
+  controls:number;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public geolocation: Geolocation, private st: SimpleTimer) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public geolocation: Geolocation, private st: SimpleTimer, public alertCtrl: AlertController, private storage: Storage) {
     this.course = this.navParams.data; 
   }
 
@@ -45,7 +46,7 @@ export class CompetePage {
   loadMap(){
     
     this.geolocation.getCurrentPosition().then((position) => {
-          let that = this;          
+                  
            let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       
            let mapOptions = {
@@ -56,7 +57,7 @@ export class CompetePage {
       
            this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
            this.setUpMarkers(this.course.markers,this.map);
-           
+
          }, (err) => {
            console.log(err);
          });
@@ -64,31 +65,57 @@ export class CompetePage {
      }
   setUpMarkers(markers, map){   
     for (var index = 0; index < markers.length; index++) { 
+    this.controls= index +1;
     let marker = new google.maps.Marker({
       map: map,
       animation: google.maps.Animation.DROP,
       position: new google.maps.LatLng(markers[index].lat, markers[index].lng),
-      draggable: true 
-    });
+      draggable: false 
+    });   
    
-    this.markers.push(marker);
-
-    let content = "<h4>Kontroll "+this.markers.length+"</h4>";         
-   
-    this.addInfoWindow(marker, content); 
+    google.maps.event.addListener(marker, 'click', () => {    
+      this.marker = marker;  
+      const alert = this.alertCtrl.create({
+        title: "Take control",
+        message: 'Do you want take this?',
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            handler: () => {
+              
+            }
+          },
+          {
+            text: 'Take',
+            handler: () => {
+              this.controls--;
+              this.marker.setMap(null);              
+              new google.maps.Marker({
+                map: map,
+                animation: google.maps.Animation.DROP,
+                position: new google.maps.LatLng(this.marker.getPosition().lat(), this.marker.getPosition().lng()),
+                draggable: false,
+                click:false,
+                icon: {
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 10
+                } 
+              });
+              let completed = false;
+              console.log(this.controls);
+              if(this.controls == 0){
+                completed = true;
+              }
+              this.result.push({lat:this.marker.getPosition().lat(), lng:this.marker.getPosition().lng(), time:this.counter});
+              this.storage.set(this.course.key, this.result);
+            }
+          }
+        ]
+      });
+      alert.present();
+    });    
     }    
-  }
-  addInfoWindow(marker, content){
-    
-     let infoWindow = new google.maps.InfoWindow({
-       content: content
-     });
-
-     google.maps.event.addListener(marker, 'click', () => {
-       infoWindow.open(this.map, marker);       
-     });
-     
-    
-   }
+  }  
 }
 
