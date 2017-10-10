@@ -21,14 +21,17 @@ export class CompetePage {
   course:any;
   @ViewChild('map') mapElement: ElementRef;
   map: any;
-  result:any = []; 
+  result:Result = new Result; 
   saveMarkers:any = [];   
   counter = 0;  
   marker:any; 
   controls:number;
+  timerId: string;
+  results:Array<Result> = new Array<Result>();
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public geolocation: Geolocation, private st: SimpleTimer, public alertCtrl: AlertController, private storage: Storage) {
     this.course = this.navParams.data; 
+    this.result.markers = [];
   }
 
   ionViewDidLoad() {
@@ -38,29 +41,27 @@ export class CompetePage {
     this.subscribeTimer();
   } 
   subscribeTimer(){
-    this.st.subscribe('1sec', () => this.timercallback());     
+    this.timerId = this.st.subscribe('1sec', () => this.timercallback());     
   }
   timercallback() {
 		this.counter++;
 	}
   loadMap(){
     
-    this.geolocation.getCurrentPosition().then((position) => {
-                  
-           let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      
-           let mapOptions = {
-             center: latLng,
-             zoom: 15,
-             mapTypeId: google.maps.MapTypeId.ROADMAP
-           }
-      
-           this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-           this.setUpMarkers(this.course.markers,this.map);
+    
+            
+      let latLng = new google.maps.LatLng(this.course.markers[0].lat, this.course.markers[0].lng);
 
-         }, (err) => {
-           console.log(err);
-         });
+      let mapOptions = {
+        center: latLng,
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      }
+
+      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+      this.setUpMarkers(this.course.markers,this.map);
+
+         
     
      }
   setUpMarkers(markers, map){   
@@ -103,12 +104,17 @@ export class CompetePage {
                 } 
               });
               let completed = false;
-              console.log(this.controls);
+              this.result.markers.push({lat:this.marker.getPosition().lat(), lng:this.marker.getPosition().lng()});
+              this.result.time = this.counter;
+              this.result.key = this.course.key;
+              this.result.completed = completed;
               if(this.controls == 0){
                 completed = true;
+                this.result.completed = completed;
+                this.st.unsubscribe(this.timerId);
+                this.results.push(this.result);
+                this.storage.set("results", this.results);
               }
-              this.result.push({lat:this.marker.getPosition().lat(), lng:this.marker.getPosition().lng(), time:this.counter});
-              this.storage.set(this.course.key, this.result);
             }
           }
         ]
@@ -118,4 +124,9 @@ export class CompetePage {
     }    
   }  
 }
-
+export class Result{ 
+    key:string;
+    markers:any[];
+    completed:boolean;
+    time:number;  
+}

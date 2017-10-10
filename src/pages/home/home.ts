@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 import { LoginPage } from '../login/login';
 import { ResultPage } from '../result/result';
-import { CompetePage } from '../compete/compete';
+import { CompetePage, Result } from '../compete/compete';
 import firebase from 'firebase';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'page-home',
@@ -13,8 +14,9 @@ export class HomePage {
   public courses: any[] = [];
   private _db: any;
   private _coursesRef: any;
+  result:Array<Result> = new Array<Result>();
 
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public alertCtrl: AlertController, private storage: Storage) {
     let that = this;   
     this._db = firebase.database().ref('/');
     this._coursesRef = firebase.database().ref('courses');   
@@ -22,9 +24,14 @@ export class HomePage {
       var data = snapshot.val();       
       data.key = snapshot.key;      
       that.courses.push(data); 
-    });   
+    }); 
+     
   }
-
+  ionViewDidLoad() {
+    this.storage.get('results').then((val) => {
+      this.result = val;
+    }); 
+  }
   goToLogin(){
   	this.navCtrl.push(LoginPage)
   }
