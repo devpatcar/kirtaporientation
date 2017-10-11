@@ -23,14 +23,25 @@ export class HomePage {
     this._coursesRef.on("child_added", function(snapshot, prevChildKey) {      
       var data = snapshot.val();       
       data.key = snapshot.key;      
-      that.courses.push(data); 
+      that.courses.push(data);
+      that.checkIfCompleted();       
+    });
+    
+  }
+  checkIfCompleted(){
+    this.storage.get('results').then((val) => {
+      this.result = val;     
+      this.courses.forEach(course => {
+          this.result.forEach(result => {
+              if(course.key == result.key){
+                course.completed = result.completed;
+              }
+          });
+      });
     }); 
-     
   }
   ionViewDidLoad() {
-    this.storage.get('results').then((val) => {
-      this.result = val;
-    }); 
+    this.checkIfCompleted();
   }
   goToLogin(){
   	this.navCtrl.push(LoginPage)
@@ -38,26 +49,31 @@ export class HomePage {
   results(){
   	this.navCtrl.push(ResultPage)
   }
-  itemSelected(course){
-    const alert = this.alertCtrl.create({
-      title: course.name,
-      message: 'Arye ready to start this course?',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: () => {
-            
+  itemSelected(course){   
+    if(course.completed){
+
+    } 
+    else{
+      const alert = this.alertCtrl.create({
+        title: course.name,
+        message: 'Are you ready to start this course?',
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            handler: () => {
+              
+            }
+          },
+          {
+            text: 'Start',
+            handler: () => {
+              this.navCtrl.push(CompetePage, course)
+            }
           }
-        },
-        {
-          text: 'Start',
-          handler: () => {
-            this.navCtrl.push(CompetePage, course)
-          }
-        }
-      ]
-    });
-    alert.present();
+        ]
+      });
+      alert.present();
+    }   
   }
 }

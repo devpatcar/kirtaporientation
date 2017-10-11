@@ -114,6 +114,19 @@ export class CompetePage {
                 this.st.unsubscribe(this.timerId);
                 this.results.push(this.result);
                 this.storage.set("results", this.results);
+               
+                const alert = this.alertCtrl.create({
+                  title: 'Course completed',
+                  subTitle: 'Time:' +this.counter +'s',
+                  buttons: [{
+                    text: 'OK',
+                    handler: () => {                      
+                      this.navCtrl.pop();
+                    }
+                  }]
+                });
+                alert.present();
+                
               }
             }
           }

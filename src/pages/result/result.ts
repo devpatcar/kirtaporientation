@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
+import { Result } from '../compete/compete';
 
 /**
  * Generated class for the ResultPage page.
@@ -14,8 +16,12 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'result.html',
 })
 export class ResultPage {
+  result:Array<Result> = new Array<Result>();
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams,private storage: Storage) {
+    this.storage.get('results').then((val) => {
+      this.result = val;  
+    }); 
   }
 
   ionViewDidLoad() {
