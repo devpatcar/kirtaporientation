@@ -32,6 +32,7 @@ export class CompetePage {
   constructor(public navCtrl: NavController, public navParams: NavParams, public geolocation: Geolocation, private st: SimpleTimer, public alertCtrl: AlertController, private storage: Storage) {
     this.course = this.navParams.data; 
     this.result.markers = [];
+    this.result.runningCords = [];
   }
 
   ionViewDidLoad() {
@@ -105,8 +106,11 @@ export class CompetePage {
               });
               let completed = false;
               this.result.markers.push({lat:this.marker.getPosition().lat(), lng:this.marker.getPosition().lng()});
+              this.result.runningCords.push({lat:this.marker.getPosition().lat(), lng:this.marker.getPosition().lng()});
               this.result.time = this.counter;
               this.result.key = this.course.key;
+              this.result.name = this.course.name;
+              this.result.distance = this.course.distance;
               this.result.completed = completed;
               if(this.controls == 0){
                 completed = true;
@@ -141,5 +145,8 @@ export class Result{
     key:string;
     markers:any[];
     completed:boolean;
-    time:number;  
+    time:number;
+    name:string;
+    distance:number;
+    runningCords:any[];  
 }

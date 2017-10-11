@@ -7,12 +7,40 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>result</ion-title>
+    <ion-title>Results</ion-title>
+    <ion-buttons end>
+        <button ion-button icon-only (click)="resetResults()">
+          <ion-icon name="remove-circle"></ion-icon>
+        </button>
+      </ion-buttons>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  
+   
+  <ion-card *ngFor="let result of results; let i = index">
+      
+      <ion-item>        
+        <h2>{{result.name}}</h2>
+        <p>{{result.distance | number : '1.2-2'}} km</p>
+      </ion-item>
+    
+      
+    
+      <ion-card-content>
+          
+      </ion-card-content>
+    
+      <ion-row>  
+        <ion-col center text-center>
+          <ion-note>
+            Time:{{result.time}} s
+          </ion-note>
+        </ion-col>
+      </ion-row>
+    
+    </ion-card>
+    <div #map id="map" style="width: 100%;height: 100%;"></div>
 </ion-content>

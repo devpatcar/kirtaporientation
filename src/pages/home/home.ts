@@ -30,14 +30,16 @@ export class HomePage {
   }
   checkIfCompleted(){
     this.storage.get('results').then((val) => {
-      this.result = val;     
-      this.courses.forEach(course => {
-          this.result.forEach(result => {
-              if(course.key == result.key){
-                course.completed = result.completed;
-              }
-          });
-      });
+      this.result = val; 
+      if(val != null){            
+        this.courses.forEach(course => {
+            this.result.forEach(result => {
+                if(course.key == result.key){
+                  course.completed = result.completed;
+                }
+            });
+        });
+      }      
     }); 
   }
   ionViewDidLoad() {
