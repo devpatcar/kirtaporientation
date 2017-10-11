@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { Result } from '../compete/compete';
@@ -17,20 +17,20 @@ declare var google;
   templateUrl: 'result.html',
 })
 export class ResultPage {
-  @ViewChild('map') mapElement: ElementRef;
   map: any;
   results:Array<Result> = new Array<Result>();
-
+  currentName:string;  
   constructor(public navCtrl: NavController, public navParams: NavParams,private storage: Storage, public alertCtrl: AlertController) {
-    this.storage.get('results').then((val) => {
-      this.results = val; 
-      this.loadMap();           
-    }); 
+    
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ResultPage'); 
-          
+    console.log('ionViewDidLoad ResultPage');     
+    this.storage.get('results').then((val) => {
+      this.results = val;    
+      this.loadMap();             
+    }); 
+    
   }
   resetResults(){
     const alert = this.alertCtrl.create({
@@ -55,17 +55,43 @@ export class ResultPage {
     });
     alert.present();
   }
-  loadMap(){
-        
-    let latLng = new google.maps.LatLng(this.results[0].markers[0].lat, this.results[0].markers[0].lng);
-    
+  reloadMap(result){
+    let latLng = new google.maps.LatLng(result.markers[0].lat, result.markers[0].lng);
+      this.currentName = result.name;     
           let mapOptions = {
             center: latLng,
             zoom: 15,
             mapTypeId: google.maps.MapTypeId.ROADMAP
           }
+          
+          this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
+          this.setUpMarkers(result.markers,this.map);
+                     
+          var flightPlanCoordinates = result.runningCords;
+          var flightPath = new google.maps.Polyline({
+            path: flightPlanCoordinates,
+            geodesic: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+          });
+  
+          flightPath.setMap(this.map);
     
-          this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+     }
+  
+  loadMap(){
+        
+    let latLng = new google.maps.LatLng(this.results[0].markers[0].lat, this.results[0].markers[0].lng);
+    this.currentName = this.results[0].name;    
+   
+          let mapOptions = {
+            center: latLng,
+            zoom: 15,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          }
+          
+          this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
           this.setUpMarkers(this.results[0].markers,this.map);
                      
           var flightPlanCoordinates = this.results[0].runningCords;

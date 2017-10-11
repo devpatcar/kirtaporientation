@@ -1,6 +1,9 @@
 page-result {
-    .map {
+    #map {
         width: 100%;
         height: 100%;
+      }
+      .floatRight{
+          float: right;
       }
 }
