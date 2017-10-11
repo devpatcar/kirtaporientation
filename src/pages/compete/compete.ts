@@ -143,7 +143,7 @@ export class CompetePage {
                 }
                 else{
                   const alert = this.alertCtrl.create({
-                    title: 'Faild to take it',
+                    title: 'Failed to take it',
                     subTitle: 'Please, try again when you are closer. '+google.maps.geometry.spherical.computeDistanceBetween(this.yourPosition, this.marker.getPosition())+' m',
                     buttons: [{
                       text: 'OK'                    
