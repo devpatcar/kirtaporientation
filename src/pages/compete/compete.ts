@@ -28,6 +28,7 @@ export class CompetePage {
   controls:number;
   timerId: string;
   results:Array<Result> = new Array<Result>();
+  isTaken:boolean;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public geolocation: Geolocation, private st: SimpleTimer, public alertCtrl: AlertController, private storage: Storage) {
     this.course = this.navParams.data; 
@@ -45,11 +46,12 @@ export class CompetePage {
     this.timerId = this.st.subscribe('1sec', () => this.timercallback());     
   }
   timercallback() {
+    this.geolocation.getCurrentPosition().then((position) => {
+      this.result.runningCords.push({lat:position.coords.latitude, lng:position.coords.longitude});
+    });
 		this.counter++;
 	}
-  loadMap(){
-    
-    
+  loadMap(){  
             
       let latLng = new google.maps.LatLng(this.course.markers[0].lat, this.course.markers[0].lng);
 
@@ -61,8 +63,6 @@ export class CompetePage {
 
       this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
       this.setUpMarkers(this.course.markers,this.map);
-
-         
     
      }
   setUpMarkers(markers, map){   
@@ -91,47 +91,67 @@ export class CompetePage {
           {
             text: 'Take',
             handler: () => {
-              this.controls--;
-              this.marker.setMap(null);              
-              new google.maps.Marker({
-                map: map,
-                animation: google.maps.Animation.DROP,
-                position: new google.maps.LatLng(this.marker.getPosition().lat(), this.marker.getPosition().lng()),
-                draggable: false,
-                click:false,
-                icon: {
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: 10
-                } 
+              let yourPosition;
+              this.isTaken = false;
+                        
+              this.geolocation.getCurrentPosition().then((position) => {
+                yourPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);                
+                this.isTaken = true;
               });
-              let completed = false;
-              this.result.markers.push({lat:this.marker.getPosition().lat(), lng:this.marker.getPosition().lng()});
-              this.result.runningCords.push({lat:this.marker.getPosition().lat(), lng:this.marker.getPosition().lng()});
-              this.result.time = this.counter;
-              this.result.key = this.course.key;
-              this.result.name = this.course.name;
-              this.result.distance = this.course.distance;
-              this.result.completed = completed;
-              if(this.controls == 0){
-                completed = true;
+             
+              if(this.isTaken){
+                this.controls--;
+                this.marker.setMap(null);              
+                new google.maps.Marker({
+                  map: map,
+                  animation: google.maps.Animation.DROP,
+                  position: new google.maps.LatLng(this.marker.getPosition().lat(), this.marker.getPosition().lng()),
+                  draggable: false,
+                  click:false,
+                  icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 10
+                  } 
+                });
+                let completed = false;
+                this.result.markers.push({lat:this.marker.getPosition().lat(), lng:this.marker.getPosition().lng()});
+                this.result.runningCords.push({lat:this.marker.getPosition().lat(), lng:this.marker.getPosition().lng()});
+                this.result.time = this.counter;
+                this.result.key = this.course.key;
+                this.result.name = this.course.name;
+                this.result.distance = this.course.distance;
                 this.result.completed = completed;
-                this.st.unsubscribe(this.timerId);
-                this.results.push(this.result);
-                this.storage.set("results", this.results);
-               
+                if(this.controls == 0){
+                  completed = true;
+                  this.result.completed = completed;
+                  this.st.unsubscribe(this.timerId);
+                  this.results.push(this.result);
+                  this.storage.set("results", this.results);
+                 
+                  const alert = this.alertCtrl.create({
+                    title: 'Course completed',
+                    subTitle: 'Time:' +this.counter +'s',
+                    buttons: [{
+                      text: 'OK',
+                      handler: () => {                      
+                        this.navCtrl.pop();
+                      }
+                    }]
+                  });
+                  alert.present();                  
+                }
+              }
+              else{
                 const alert = this.alertCtrl.create({
-                  title: 'Course completed',
-                  subTitle: 'Time:' +this.counter +'s',
+                  title: 'Faild to take it',
+                  subTitle: 'Please, try again when you are closer.',
                   buttons: [{
-                    text: 'OK',
-                    handler: () => {                      
-                      this.navCtrl.pop();
-                    }
+                    text: 'OK'                    
                   }]
                 });
                 alert.present();
-                
               }
+              
             }
           }
         ]
