@@ -18,11 +18,19 @@ export class HomePage {
 
   constructor(public navCtrl: NavController, public alertCtrl: AlertController, private storage: Storage) {   
     this._db = firebase.database().ref('/');
-    this._coursesRef = firebase.database().ref('courses');   
+    this._coursesRef = firebase.database().ref('courses'); 
+    let that = this;     
+    this._coursesRef.on("child_added", function(snapshot, prevChildKey) {      
+      var data = snapshot.val();       
+      data.key = snapshot.key;  
+      that.courses.push(data);
+      that.checkIfCompleted();       
+    });  
   }
   checkIfCompleted(){
     this.storage.get('results').then((val) => {
-      this.result = val; 
+      this.result = val;
+      console.log(this.result); 
       if(val != null){            
         this.courses.forEach(course => {
             this.result.forEach(result => {
@@ -35,18 +43,9 @@ export class HomePage {
     }); 
   }
   ionViewWillEnter() {
-    let that = this; 
-    this._coursesRef.on("child_added", function(snapshot, prevChildKey) {      
-      var data = snapshot.val();       
-      data.key = snapshot.key;  
-      that.courses = [];    
-      that.courses.push(data);
-      that.checkIfCompleted();       
-    });
-    this.checkIfCompleted();
+    this.checkIfCompleted();     
   }
-  ionViewDidLoad() {
-   
+  ionViewDidLoad() {    
   }
   goToLogin(){
   	this.navCtrl.push(LoginPage)
