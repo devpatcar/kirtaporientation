@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef} from '@angular/core';
+import { Component} from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 import {SimpleTimer} from 'ng2-simple-timer';
@@ -18,8 +18,7 @@ declare var google;
   templateUrl: 'compete.html',
 })
 export class CompetePage {
-  course:any;
-  @ViewChild('map') mapElement: ElementRef;
+  course:any; 
   map: any;
   result:Result = new Result; 
   saveMarkers:any = [];   
@@ -62,7 +61,7 @@ export class CompetePage {
         mapTypeId: google.maps.MapTypeId.ROADMAP
       }
 
-      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+      this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
       this.setUpMarkers(this.course.markers,this.map);
     
      }

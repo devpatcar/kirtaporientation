@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 import firebase from 'firebase';
@@ -17,8 +17,7 @@ declare var google;
   templateUrl: 'editcourse.html',
 })
 export class EditcoursePage {
-  course:any;
-  @ViewChild('map') mapElement: ElementRef;
+  course:any; 
   map: any;
   markers:any = []; 
   saveMarkers:any = []; 
@@ -62,7 +61,7 @@ export class EditcoursePage {
              mapTypeId: google.maps.MapTypeId.ROADMAP
            }
       
-           this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+           this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
            this.setUpMarkers(this.course.markers,this.map);
            // This event listener calls addMarker() when the map is clicked.
             google.maps.event.addListener(this.map, 'click', function(event) {
