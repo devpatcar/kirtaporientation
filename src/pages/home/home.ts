@@ -19,13 +19,7 @@ export class HomePage {
   constructor(public navCtrl: NavController, public alertCtrl: AlertController, private storage: Storage) {   
     this._db = firebase.database().ref('/');
     this._coursesRef = firebase.database().ref('courses'); 
-    let that = this;     
-    this._coursesRef.on("child_added", function(snapshot, prevChildKey) {      
-      var data = snapshot.val();       
-      data.key = snapshot.key;  
-      that.courses.push(data);
-      that.checkIfCompleted();       
-    });  
+   
   }
   checkIfCompleted(){
     this.storage.get('results').then((val) => {
@@ -43,7 +37,14 @@ export class HomePage {
     }); 
   }
   ionViewWillEnter() {
-    this.checkIfCompleted();     
+    let that = this;   
+    this.courses = [];  
+    this._coursesRef.on("child_added", function(snapshot, prevChildKey) {      
+      var data = snapshot.val();       
+      data.key = snapshot.key;  
+      that.courses.push(data);
+      that.checkIfCompleted();       
+    });      
   }
   ionViewDidLoad() {    
   }

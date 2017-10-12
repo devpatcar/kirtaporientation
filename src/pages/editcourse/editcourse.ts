@@ -52,7 +52,7 @@ export class EditcoursePage {
   loadMap(){
     
     this.geolocation.getCurrentPosition().then((position) => {
-          let that = this;          
+                    
            let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       
            let mapOptions = {
@@ -62,11 +62,10 @@ export class EditcoursePage {
            }
       
            this.map = new google.maps.Map(document.getElementById('map'), mapOptions);
-           this.setUpMarkers(this.course.markers,this.map);
-           // This event listener calls addMarker() when the map is clicked.
-            google.maps.event.addListener(this.map, 'click', function(event) {
-              that.addMarkerOnClick(event.latLng);
-            });
+           if(this.course.markers.length > 0){
+            this.setUpMarkers(this.course.markers,this.map);  
+           }                   
+           
          }, (err) => {
            console.log(err);
          });
